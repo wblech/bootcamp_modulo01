@@ -6,6 +6,16 @@ server.use(express.json());
 
 const projects = [{ id: '1', title: 'Primeiro Título', tasks: ['fazer lição', 'jogar bola'] }];
 
+// MiddleWare - Verify id the ID number exists
+function checkProjectExists(req, res, next) {
+  const { id } = req.params;
+  const project = projects.find(p => p.id === id);
+  if (!project) {
+    return res.status(400).json({ error: "Project doesn't exists" });
+  }
+  return next();
+}
+
 // Get all posts
 server.get('/projects', (req, res) => res.json(projects));
 
@@ -18,7 +28,7 @@ server.post('/projects', (req, res) => {
 });
 
 // Change title name
-server.put('/projects/:id', (req, res) => {
+server.put('/projects/:id', checkProjectExists, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
@@ -28,7 +38,7 @@ server.put('/projects/:id', (req, res) => {
 });
 
 // Add new task
-server.put('/projects/:id/task', (req, res) => {
+server.put('/projects/:id/task', checkProjectExists, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   const project = projects.find(p => p.id === id);
@@ -37,7 +47,7 @@ server.put('/projects/:id/task', (req, res) => {
 });
 
 // Add delete
-server.delete('/projects/:id', (req, res) => {
+server.delete('/projects/:id', checkProjectExists, (req, res) => {
   const { id } = req.params;
   const projectIndex = projects.findIndex(p => p.id === id);
   projects.splice(projectIndex);
