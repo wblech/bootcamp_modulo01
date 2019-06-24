@@ -2,19 +2,16 @@ const express = require('express');
 
 const server = express();
 
-const projects = [
-  {
-    id: '01',
-    title: 'primeiro titulo',
-    tasks: ['fazer algo', 'comer jacaré'],
-  },
-];
+server.use(express.json());
 
-server.get('/projects', (req, res) => res.Json(projects));
+const projects = [];
+
+server.get('/projects', (req, res) => res.json(projects));
 
 server.post('/projects', (req, res) => {
   const { id, title } = req.body;
-  projects.push({ id, title });
-  return res.Json(projects);
+  const project = { id, title, tasks: [] };
+  projects.push(project);
+  return res.json(projects);
 });
 server.listen(3000);
