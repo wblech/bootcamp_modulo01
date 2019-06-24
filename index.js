@@ -36,4 +36,12 @@ server.put('/projects/:id/task', (req, res) => {
   res.send(projects);
 });
 
+// Add delete
+server.delete('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  const projectIndex = projects.findIndex(p => p.id === id);
+  projects.splice(projectIndex);
+  res.send(projects);
+});
+
 server.listen(3000);
