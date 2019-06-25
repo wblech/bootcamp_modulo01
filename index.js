@@ -5,6 +5,7 @@ const server = express();
 server.use(express.json());
 
 const projects = [{ id: '1', title: 'Primeiro Título', tasks: ['fazer lição', 'jogar bola'] }];
+let num = 0;
 
 // MiddleWare - Verify id the ID number exists
 function checkProjectExists(req, res, next) {
@@ -15,6 +16,15 @@ function checkProjectExists(req, res, next) {
   }
   return next();
 }
+
+// MiddleWare - Count requisitions
+function logRequisitions(req, res, next) {
+  num += 1;
+  console.log(`There has been ${num} HTTP requisitions`);
+  next();
+}
+
+server.use(logRequisitions);
 
 // Get all posts
 server.get('/projects', (req, res) => res.json(projects));
